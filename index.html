@@ -1,34 +1,79 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react-dom.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-  <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" />
-</head>
-<body>
-  <div id='content' class='container'>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.5/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+    <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" />
+  </head>
+  <body>
+    <div id='content' class='container'>
 
-  </div>
-  <script type='text/babel'>
-    class List extends React.Component {
-      constructor(props) {
-        super(props);
+    </div>
+    <script type='text/babel'>
+      class List extends React.Component {
+        constructor(props) {
+          //has to be the first line
+          super(props);
+          //extra component setup
+          this.state = { items: [], complete: 0, nextId: 0 };
+          this.addItem = this.addItem.bind(this);
+          this.items = this.items.bind(this);
+        }
+
+        addItem(e) {
+          e.preventDefault();
+          //grab the value from the input in the form using REFS
+          //add that as a item in the STATE
+          //new item to show up in the List
+          let items = [{name: this.refs.name.value}, ...this.state.items]
+          this.refs.name.value = null;
+          //setState ALWAYS calls render()
+          this.setState({ items: items, nextId: ++this.state.nextId })
+        }
+
+        items() {
+          //loop items in STATE
+          //render JSX for each item
+          let items = this.state.items.map(item => {
+            return(<Item name={item.name} />);
+          });
+
+          return items;
+        }
+        //every component needs a render function!
+        render() {
+          return(
+            <div className='center'>
+              <h1>{this.props.title}</h1>
+              <form onSubmit={this.addItem}>
+                <input type='text'  required placeholder='Item Name' ref='name' />
+                <input type='submit' className='btn' value='Add Item' />
+              </form>
+              <h3>ToDo List Items</h3>
+              <div className='row'>
+                {this.items()}
+              </div>
+            </div>
+          )
+        }
       }
-// every component needs a render function!
-      render() {
-        return(
-          <div>
-            <h1>Hello World</h1>
-          </div>
-        )
+
+      class Item extends React.Component {
+          constructor(props){
+          super(props);
+        }
+
+        render() {
+          return(<p>{this.props.name}</p>)
+        }
       }
-    }
-    ReactDOM.render(<List />, document.getElementById('content'));
-  </script>
-</body>
+
+      ReactDOM.render(<List title='First React Component'/>, document.getElementById('content'));
+    </script>
+  </body>
 </html>
