@@ -23,7 +23,32 @@
           this.state = { items: [], complete: 0, nextId: 0 };
           this.addItem = this.addItem.bind(this);
           this.items = this.items.bind(this);
-          this.deleteItem = this.deleteItem.bind(this)
+          this.deleteItem = this.deleteItem.bind(this);
+          this.completeCount = this.completeCount.bind(this);
+          this.refreshCount = this.refreshCount.bind(this);
+        }
+
+        refreshCount(id, checked) {
+          let items;
+          let itemArray = this.state.items;
+          let index = itemArray.findIndex(x => x.id === id);
+          let item = itemArray.splice(index, 1)[0];
+          item.complete = checked;
+          let complete = this.state.complete
+          if(checked) {
+            items = [{...item}, ...itemArray];
+            complete++;
+          } else {
+            items = [...itemArray, {...item}];
+            complete--;
+          }
+          this.setState({items, complete });
+
+        }
+
+        completeCount() {
+          let complete = this.state.complete;
+          return(<p>{`${complete}/${this.state.items.length} complete`}</p>)
         }
 
         deleteItem(id) {
@@ -34,7 +59,8 @@
           //delete the item from the array
           items.splice(index, 1);
           //set state
-          this.setState({ items: items, nextId: ++this.state.nextId });
+          this.setState({ items, complete, nextId: ++this.state.nextId });
+
         }
 
         addItem(e) {
@@ -52,7 +78,7 @@
           //loop items in STATE
           //render JSX for each item
           let items = this.state.items.map(item => {
-            return(<Item  key={`item-${item.id}`} name={item.name} complete={item.complete} id={item.id} deleteItem={this.deleteItem}/>);
+            return(<Item  key={`item-${item.id}`} name={item.name} complete={item.complete} id={item.id} deleteItem={this.deleteItem} refreshCount={this.refreshCount} />);
           });
 
           return items;
@@ -66,6 +92,7 @@
                 <input type='text'  required placeholder='Item Name' ref='name' />
                 <input type='submit' className='btn' value='Add Item' />
               </form>
+              {this.completeCount()}
               <h3>ToDo List Items</h3>
               <div className='row'>
                 {this.items()}
@@ -94,6 +121,7 @@
             }
           }
           this.setState({ checked, style });
+          this.props.refreshCount(this.props.id, checked)
         }
 
         render() {
