@@ -12,9 +12,23 @@
 </head>
 <body>
   <div id='content' class='container'>
+
   </div>
   <script type='text/babel'>
-  //React code goes here
+    class List extends React.Component {
+      constructor(props) {
+        super(props);
+      }
+// every component needs a render function!
+      render() {
+        return(
+          <div>
+            <h1>Hello World</h1>
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(<List />, document.getElementById('content'));
   </script>
 </body>
 </html>
