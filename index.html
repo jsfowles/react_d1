@@ -34,10 +34,17 @@
           notes() {
             let notes = this.state.notes.map(note => {
               return(
-                <div key={note.id}>
-                  <h5>{note.name}</h5>
-                  <p>{note.description}</p>
+                <div key={note.id} className='row'>
+                  <div className="col s12 m3">
+                    <div className="card-panel yellow">
+                      <span className="black-text">
+                        <h5>{note.name}</h5>
+                        <p>{note.description}</p>
+                      </span>
+                    </div>
+                  </div>
                 </div>);
+
               });
               return notes;
             }
@@ -53,18 +60,14 @@
                   </form>
 
 
-                  
+
                   <h3>Your Sticky Notes</h3>
-                  <div className='row'>
-                    <div className="col s12 m3">
-                      <div className="card-panel yellow">
-                        <span className="black-text">
-                          {this.notes()}
-                        </span>
-                      </div>
-                    </div>
+                  <div>
+                    {this.notes()}
+                    
                   </div>
                 </div>
+
               )
             }
           }
