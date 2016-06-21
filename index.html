@@ -21,6 +21,14 @@
             this.state = { notes: [], description: [], nextId: 0 };
             this.addNote = this.addNote.bind(this);
             this.notes = this.notes.bind(this);
+            this.deleteNote = this.deleteNote.bind(this);
+          }
+
+          deleteNote(id) {
+            let notes = this.state.notes;
+            let index = items.findIndex( x => x.id == id);
+            notes.splice(index, 1);
+            this.setState({notes, nextId: ++this.state.nextId });
           }
 
           addNote(e) {
@@ -28,19 +36,27 @@
             let notes = [{name: this.refs.name.value, description: this.refs.description.value, id: this.state.nextId}, ...this.state.notes]
             this.refs.name.value = null;
             this.refs.description.value = null;
-            this.setState({notes: notes, nextId: ++this.state.nextId })
+            this.setState({notes: notes, nextId: ++this.state.nextId });
           }
 
           notes() {
             let notes = this.state.notes.map(note => {
               return(
-                <div key={note.id} className='row'>
-                  <div className="col s12 m3">
+                <div key={note.id} deleteNote={this.deleteNote} className='row'>
+                  <div className="col s12 m4 offset-m4">
                     <div className="card-panel yellow">
                       <span className="black-text">
                         <h5>{note.name}</h5>
+                      </span>
+                      <span className="black-text">
                         <p>{note.description}</p>
                       </span>
+                      <button className='btn red' onClick={() => this.props.deleteNote(this.props.id)}>
+                        remove
+                      </button><span>  </span>
+                      <button className='btn red' onClick={() => this.props.deleteNote(this.props.id)}>
+                        edit
+                      </button>
                     </div>
                   </div>
                 </div>);
@@ -51,22 +67,19 @@
 
             render() {
               return(
-                <div className='center'>
-                  <h1>{this.props.title}</h1>
-                  <form onSubmit={this.addNote}>
-                    <input type='text'  required placeholder='Note Name' ref='name' />
-                    <input type='text'  required placeholder='Note Description' ref='description' />
-                    <input type='submit' className='btn' value='Add Note' />
-                  </form>
 
-
-
-                  <h3>Your Sticky Notes</h3>
-                  <div>
-                    {this.notes()}
-                    
+                  <div className='add-note center col s12 m5 offset-m3' >
+                    <h1>{this.props.title}</h1>
+                    <form onSubmit={this.addNote}>
+                      <input type='text'  required placeholder='Note Name' ref='name' />
+                      <input type='text'  required placeholder='Note Description' ref='description' />
+                      <input type='submit' className='btn' value='Add Note' />
+                    </form>
+                    <h3>Your Sticky Notes</h3>
+                    <div>
+                      {this.notes()}
+                    </div>
                   </div>
-                </div>
 
               )
             }
